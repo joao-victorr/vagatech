@@ -1,0 +1,41 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "start": "node dist/server.js",
+    "build": "tsc",
+    "deploy": "npx prisma migrate deploy",
+    "dev": "nodemon src/server.ts",
+    "studio": "npx prisma studio",
+    "migrate": "npx prisma migrate dev",
+    "seed": "npx prisma db seed",
+    "prod": "npm run deploy && npm run seed && npm start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-async-errors": "^3.1.1",
+    "prisma": "^5.20.0",
+    "sharp": "^0.33.5",
+    "tesseract.js": "^5.1.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.3",
+    "@prisma/client": "^5.20.0",
+    "@types/axios": "^0.9.36",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.7.4",
+    "nodemon": "^3.1.7",
+    "studio": "^0.13.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2",
+    "@types/sharp": "^0.31.1"
+  }
+}

@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @default(uuid())
+  email    String @unique
+  password String
+}
+
+model Client {
+  id           String    @id @default(uuid())
+  name         String
+  cpf          String    @unique
+  monthlyPayer Boolean   @default(false)
+  vehicles     Vehicle[] // Relacionamento one-to-many
+  vacancy      Vacancy[] // Relacionamento one-to-many
+}
+
+model Vehicle {
+  id               String   @id @default(uuid())
+  placa            String   @unique
+  clientId         String // Chave estrangeira para Client
+  client           Client   @relation(fields: [clientId], references: [id]) // Relacionamento many-to-one com Client
+  currentVacancyId String?  @unique // Chave estrangeira opcional para Vacancy
+  currentVacancy   Vacancy? @relation("VehicleVacancy", fields: [currentVacancyId], references: [id]) // Relacionamento one-to-one
+}
+
+model Vacancy {
+  id String @id @default(uuid())
+
+  status           String
+  clientId         String? // Chave estrangeira opcional para Client
+  client           Client?     @relation(fields: [clientId], references: [id])
+  currentVehicle   Vehicle?    @relation("VehicleVacancy") // Relacionamento one-to-one
+  currentVehicleId String?     @unique // Chave estrangeira opcional para Vehicle
+  VacancyType      VacancyType @relation(fields: [vacancyTypeId], references: [id])
+  vacancyTypeId    String
+}
+
+model VacancyType {
+  id        String    @id @default(uuid())
+  name      String
+  price     Float
+  vacancies Vacancy[] // Um VagaType pode ter várias Vagas
+}
