@@ -1,29 +1,37 @@
-
-import express, { ErrorRequestHandler, type Request, type Response } from 'express';
+import express from 'express';
 import dotenv from 'dotenv';
-
-
-import { router } from "./Router/router";
-
+import { createServer } from 'http';
+import { Server as SocketIOServer } from 'socket.io';
+import { router } from './Routers/router';
+import { handleSocketConnection } from './Routers/routerSocket';
 
 dotenv.config();
-const server = express();
 
+const app = express();
+const httpServer = createServer(app); // Cria o servidor HTTP
+export const io = new SocketIOServer(httpServer, {
+  cors: {
+    origin: '*', // Configurar para permitir o front-end (atualize conforme necessário)
+    methods: ['GET', 'POST']
+  }
+}); // Cria o servidor WebSocket associado ao HTTP
 
-server.use(express.urlencoded({ extended: true }));
-server.use(express.json());
-// server.use(express.static(path.join(__dirname, '../public')));
+// Middleware do Express
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
+// Rotas HTTP normais
+app.use(router);
 
-
-server.use(router)
-
-server.use("/", (req: Request, res: Response) => {
-    res.send("Hello World")
-})
-
-
-
-server.listen(process.env.PORT, () => {
-    console.log(`Servidor rodando na porta ${process.env.PORT}`);
+// Inicializa o WebSocket e lida com conexões
+io.on('connection', (socket) => {
+  handleSocketConnection(socket);
 });
+
+// Inicia o servidor HTTP e WebSocket
+const PORT = process.env.PORT || 3000;
+httpServer.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
+
+
