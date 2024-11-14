@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import { prismaClient } from '../Databases/PrismaClient'
+
 import { getPlateVehicle } from '../Functions/getEspImage';
 import { EmitSocket } from './EmitSocket';
 
@@ -17,18 +19,18 @@ export class ESPController {
     if (!data.ip) {
       console.error(data, "Faltando dados.");
       res.status(400).send("Dados inválidos");
-      return
+      return;
     }
 
     if (!data.detected) {
       console.log("Falso");
       res.status(200).send("Failed to detect");
-      return
+      return;
     }
 
-    const numberPlate = await getPlateVehicle(data.ip);
-    console.log(numberPlate);
 
+
+    const numberPlate = await getPlateVehicle(data.ip);
     // Aqui é onde emitimos a atualização para os clientes conectados via WebSocket
     emitSocket.emitUpdateVacancy({ numberPlate, vacancyNumber: data.vacancyNumber });
 

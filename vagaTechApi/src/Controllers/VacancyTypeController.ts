@@ -9,7 +9,7 @@ interface Data {
 
 }
 
-export class VacancyType {
+export class VacancyTypeController {
 
   async read (req: Request, res: Response) {
     console.log(req.query)

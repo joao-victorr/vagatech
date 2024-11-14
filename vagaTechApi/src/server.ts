@@ -4,10 +4,15 @@ import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import { router } from './Routers/router';
 import { handleSocketConnection } from './Routers/routerSocket';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
+
+
+app.use(cors({ origin: '*' }));
+
 const httpServer = createServer(app); // Cria o servidor HTTP
 export const io = new SocketIOServer(httpServer, {
   cors: {

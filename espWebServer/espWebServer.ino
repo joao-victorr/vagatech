@@ -18,14 +18,17 @@
 #define echoPin 14 // define EchoPin.
 #define MAX_DISTANCE 700 // Maximum sensor distance is rated at 400-500cm.
 //timeOut= 2*MAX_DISTANCE /100 /340 *1000000 = MAX_DISTANCE*58.8
-#define DISTANCE_THRESHOLD 25 // Distância limite de 25 cm
+#define DISTANCE_THRESHOLD 60 // Distância limite de 60 cm
 #define CONSECUTIVE_THRESHOLD 10 // Número de medições consecutivas
+
+int vacancyNumber = 1;
 
 float timeOut = MAX_DISTANCE * 60; 
 int soundVelocity = 340; // define sound speed=340m/s
 
 int consecutiveBelowThreshold = 0;
 int consecutiveAboveThreshold = 0;
+const char* apiBaseUrl = "http://192.168.0.2:4000";
 
 boolean detected = false;
 
@@ -125,15 +128,19 @@ void setup() {
 // Função para enviar o status para a API
 void sendToAPI(boolean detectedStatus) {
   HTTPClient http;
-  http.begin("http://192.168.0.2:4000/detectedVehicle"); // URL da API
+  String fullUrl = String(apiBaseUrl) + "/detectedVehicle";
+  http.begin(fullUrl); // URL da API
 
   http.addHeader("Content-Type", "application/json"); // Define o tipo de conteúdo como JSON
   
     // Monta o corpo da requisição, incluindo o IP do ESP
+  // Monta o corpo da requisição, incluindo o IP do ESP
   String ipAddress = WiFi.localIP().toString(); // Obtém o endereço IP local
   String requestBody = "{\"detected\":"; 
   requestBody += (detectedStatus ? "true" : "false");
-  requestBody += ", \"ip\":\"" + ipAddress + "\"}"; // Adiciona o IP no corpo da requisição
+  requestBody += ", \"ip\":\"" + ipAddress + "\""; // Adiciona o IP no corpo da requisição
+  requestBody += ", \"vacancyNumber\":" + String(vacancyNumber) + "}"; // Adiciona o vacancyNumber como número
+
 
 
   int httpResponseCode = http.POST(requestBody); // Envia a requisição POST

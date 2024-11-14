@@ -14,13 +14,13 @@ datasource db {
 }
 
 model User {
-  id       String @default(uuid())
+  id       String @default(cuid())
   email    String @unique
   password String
 }
 
 model Client {
-  id           String    @id @default(uuid())
+  id           String    @id @default(cuid())
   name         String
   cpf          String    @unique
   monthlyPayer Boolean   @default(false)
@@ -29,7 +29,7 @@ model Client {
 }
 
 model Vehicle {
-  id               String   @id @default(uuid())
+  id               String   @id @default(cuid())
   placa            String   @unique
   clientId         String // Chave estrangeira para Client
   client           Client   @relation(fields: [clientId], references: [id]) // Relacionamento many-to-one com Client
@@ -38,9 +38,9 @@ model Vehicle {
 }
 
 model Vacancy {
-  id String @id @default(uuid())
-
-  status           String
+  id               String      @id @default(cuid())
+  vacancyNumber    Int         @unique @default(autoincrement())
+  status           Int         @default(0)
   clientId         String? // Chave estrangeira opcional para Client
   client           Client?     @relation(fields: [clientId], references: [id])
   currentVehicle   Vehicle?    @relation("VehicleVacancy") // Relacionamento one-to-one
@@ -50,7 +50,7 @@ model Vacancy {
 }
 
 model VacancyType {
-  id        String    @id @default(uuid())
+  id        String    @id @default(cuid())
   name      String
   price     Float
   vacancies Vacancy[] // Um VagaType pode ter várias Vagas

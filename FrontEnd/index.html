@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VagaTech</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="imagens/logo.png" alt="Logo da VagaTech" class="logo">
+        </div>
+        <nav>
+          <ul>
+            <li><a href="#">Vagas</a></li>
+            <li><a href="#">Cadastro</a></li>
+            <li><a href="#">Configurações</a></li>
+          </ul>
+        </nav>
+    </header>
+  <div class="container">
+    <div id="vagaGrid" class="vagas-grid">
+      
+    </div>
+
+    <div class="info-panel">
+      <h3>Informações da Vaga</h3>
+      <p>Nome: <span id="nome"></span></p>
+      <p>Placa: <span id="placa"></span></p>
+      <p>Tempo Estacionado: <span id="tempo"></span></p>
+    </div>
+  </div>
+
+  <div class="pagination-container">
+    <button id="prevBtn">Anterior</button>
+    <span id="pageInfo">Página 1 de 5</span>
+    <button id="nextBtn">Próximo</button>
+  </div>   
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>
