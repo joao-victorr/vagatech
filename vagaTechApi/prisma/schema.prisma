@@ -30,7 +30,7 @@ model Client {
 
 model Vehicle {
   id               String   @id @default(cuid())
-  placa            String   @unique
+  plate            String   @unique
   clientId         String // Chave estrangeira para Client
   client           Client   @relation(fields: [clientId], references: [id]) // Relacionamento many-to-one com Client
   currentVacancyId String?  @unique // Chave estrangeira opcional para Vacancy

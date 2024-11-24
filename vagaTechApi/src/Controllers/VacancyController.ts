@@ -35,8 +35,6 @@ export class VacancyController {
 
   async read(req: Request, res: Response) {
 
-    console.log("Deu certo")
-
     const vacancyId = req.query.id as string | undefined;
 
 
@@ -54,8 +52,11 @@ export class VacancyController {
       return;
     }
 
-    const vacancy = await prismaClient.vacancy.findMany();
-    console.log("retornou tudo")
+    const vacancy = await prismaClient.vacancy.findMany({
+      orderBy: {
+        vacancyNumber: 'asc', // 'asc' para ordem crescente
+      },
+    });
 
     res.status(200).json(vacancy);
     return

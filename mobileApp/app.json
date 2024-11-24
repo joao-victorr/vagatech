@@ -5,7 +5,9 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "newArchEnabled": true,
     "splash": {
+      "image": "./assets/react.svg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

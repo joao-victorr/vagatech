@@ -14,22 +14,56 @@ interface Vacancy {
   vacancyNumber: number,
 }
 
-const vacancyApi = new UseApi().vacancyApi
+interface ViewVacancy {
+  vacancyNumber: number | null;
+  vacancyType: string | null;
+  status: boolean;
+  clientName: string | null;
+  vehiclePlate: string | null;
+}
+
+const vacancyApi = new UseApi().vacancyApi;
+const vehicleApi = new UseApi().vehicleApi;
 export default function App() {
   
 
   // Estado para armazenar a vaga selecionada e se o painel está visível
-  const [selectedVacancy, setSelectedVacancy] = useState<Vacancy | null>(null);
+  const [selectedVacancy, setSelectedVacancy] = useState<ViewVacancy | null>(null);
   const [isInfoVisible, setIsInfoVisible] = useState(false);
 
   const [vacancyData, setVacancyData] = useState<Array<Vacancy>>([]);
 
   // Função chamada ao clicar em uma vaga
-  const handleVacancy = (id: string) => {
-    console.log("Teste")
+  const handleVacancy = async (id: string) => {
+    
     const vacancy = vacancyData.find(v => v.id === id);
     if (vacancy) {
-      setSelectedVacancy(vacancy);
+      // Busca dados do veículo relacionado à vaga
+      if(!vacancy.currentVehicleId) {
+        const currentVacancy: ViewVacancy = {
+          vacancyNumber: vacancy.vacancyNumber,
+          vacancyType: null,
+          status: false,
+          clientName: null,
+          vehiclePlate: null
+        }
+        setSelectedVacancy(currentVacancy);
+        setIsInfoVisible(true);
+        return
+      }
+
+      console.log(vacancy.currentVehicleId)
+      const vehicle = await vehicleApi.getById(vacancy.currentVehicleId)
+
+
+      const currentVacancy: ViewVacancy = {
+        vacancyNumber: vacancy.vacancyNumber,
+        vacancyType: "simples",
+        status: false,
+        clientName: vehicle.client.name,
+        vehiclePlate: vehicle.plate
+      }
+      setSelectedVacancy(currentVacancy);
       setIsInfoVisible(true);
     }
   };
@@ -45,25 +79,22 @@ export default function App() {
         const data = await vacancyApi.getAll();
         // Verifique se data é realmente um array
         if (Array.isArray(data)) {
-          console.log('Data is an array:', data);
           setVacancyData(data);
         } else {
           console.error('Data is not an array:', data);
         }
       } catch (error) {
-        console.error("Error fetching vacancy data:", error);
+        console.error("Error fetching vacancy data: >", error);
       }
     };
     
-
-
     getVacancyData();
   }, [])
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Image style={styles.headerImg} source={require("./assets/user.png")}  />
+        {/* <Image style={styles.headerImg} source={require(".//assets//user.png")}/> */}
         
         <TouchableOpacity style={styles.menuButton}>
           <Ionicons name="menu" size={32} color="#fff" />
@@ -91,9 +122,11 @@ export default function App() {
             <TouchableOpacity style={styles.closeButton} onPress={handleCloseInfo}>
               <Ionicons name="close" size={32} color="#fff" />
             </TouchableOpacity>
-            <Text style={styles.infoText}>Número da Vaga: {selectedVacancy?.vacancyNumber}</Text>
-            {/* <Text style={styles.infoText}>Placa: {selectedVacancy?.numberPlate}</Text>
-            <Text style={styles.infoText}>Tipo: {selectedVacancy?.type}</Text> */}
+            <Text style={styles.infoText}>Vaga: {selectedVacancy?.vacancyNumber}</Text>
+            <Text style={styles.infoText}>Placa: {selectedVacancy?.vehiclePlate}</Text>
+            <Text style={styles.infoText}>Tipo: {selectedVacancy?.vacancyType}</Text>
+            <Text style={styles.infoText}>Status: {selectedVacancy?.status ? "Ocupado" : "Livre"}</Text>
+
           </View>
         )}
     </SafeAreaView>

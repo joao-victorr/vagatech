@@ -4,11 +4,13 @@ import { ESPController } from '../Controllers/ESPControler'
 import { VacancyTypeController } from '../Controllers/VacancyTypeController';
 import { VacancyController } from '../Controllers/VacancyController';
 import { ClientController } from '../Controllers/ClientController';
+import { VehicleController } from '../Controllers/VehicleController';
 
 const espController = new ESPController;
 const vacancyType = new VacancyTypeController;
 const vacancy = new VacancyController;
 const client = new ClientController;
+const vehicle = new VehicleController;
 
 
 const router = Router();
@@ -38,6 +40,11 @@ router.get("/client", client.read);
 router.post("/client", client.create);
 router.put("/client", client.update);
 router.delete("/client", client.delete);
+
+router.get("/vehicle", vehicle.read);
+router.post("/vehicle", vehicle.create);
+router.put("/vehicle", vehicle.update);
+router.delete("/vehicle", vehicle.delete);
 
 
 
