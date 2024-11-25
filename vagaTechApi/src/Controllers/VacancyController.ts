@@ -58,6 +58,7 @@ export class VacancyController {
       },
     });
 
+    console.log(vacancy);
     res.status(200).json(vacancy);
     return
 

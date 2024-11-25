@@ -16,26 +16,60 @@ export class ESPController {
   async receive(req: Request, res: Response) {
     const data: Data = req.body;
 
-    if (!data.ip) {
+    if (!data.ip || !data.vacancyNumber) {
       console.error(data, "Faltando dados.");
       res.status(400).send("Dados inválidos");
       return;
     }
 
     if (!data.detected) {
-      console.log("Falso");
-      res.status(200).send("Failed to detect");
+      
+      await prismaClient.vacancy.update({
+        where: { vacancyNumber: data.vacancyNumber },
+        data: {
+          status: 0, // O status da vaga é 0 (disponível)
+        }
+      })
+
+      const vacancy = await prismaClient.vacancy.findUnique({
+        where: { vacancyNumber: data.vacancyNumber }
+      })
+
+      emitSocket.emitUpdateVacancy( vacancy );
+      // Enviamos a resposta HTTP para o ESP
+      res.status(200).json("success");
+
       return;
     }
 
+    const numberPlate =  "DDO5M99" //await getPlateVehicle(data.ip);
 
+    if (!numberPlate) {
+      console.error("Falha ao pegar número da placa.");
+      res.status(500).send("Failed to get vehicle plate");
+      return;
+    }
 
-    const numberPlate = await getPlateVehicle(data.ip);
-    // Aqui é onde emitimos a atualização para os clientes conectados via WebSocket
-    emitSocket.emitUpdateVacancy({ numberPlate, vacancyNumber: data.vacancyNumber });
+    await prismaClient.vacancy.update({
+      where: { vacancyNumber: data.vacancyNumber },
+      data: {
+        status: 1, // O status da vaga é 1 (ocupada)
+      }
+    })
 
+    const vacancy = await prismaClient.vacancy.findUnique({
+      where: { vacancyNumber: data.vacancyNumber }
+    })
+
+    if (!vacancy) {
+      console.error("Vaga não encontrada.");
+      res.status(404).send("Vacancy not found");
+      return;
+    }
+
+    emitSocket.emitUpdateVacancy( vacancy );
     // Enviamos a resposta HTTP para o ESP
-    res.status(200);
+    res.status(200).json("success");
     return;
   }
 }

@@ -10,7 +10,7 @@
     "studio": "npx prisma studio",
     "migrate": "npx prisma migrate dev",
     "seed": "npx prisma db seed",
-    "prod": "npm run deploy && npm run seed && npm start"
+    "prod": "npm run deploy && npm start"
   },
   "keywords": [],
   "author": "",

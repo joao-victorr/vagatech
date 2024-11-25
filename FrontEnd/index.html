@@ -6,7 +6,6 @@
   <title>VagaTech</title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
-
 </head>
 <body>
     <header>
@@ -23,10 +22,14 @@
     </header>
   <div class="container">
     <div id="vagaGrid" class="vagas-grid">
-      
+      <!-- Modelo base para clonagem -->
+      <div id="vagaModelo" class="vaga" style="display: none;">
+        <span class="vaga-numero"></span>
+        <span class="vaga-status"></span>
+      </div>
     </div>
 
-    <div class="info-panel">
+    <div id="info-panel" class="info-panel">
       <h3>Informações da Vaga</h3>
       <p>Nome: <span id="nome"></span></p>
       <p>Placa: <span id="placa"></span></p>
@@ -40,8 +43,7 @@
     <button id="nextBtn">Próximo</button>
   </div>   
 
-  <script src="data.js"></script>
-  <script src="script.js"></script>
-
+  <script src="./data.js"></script>
+  <script src="./script.js"></script>
 </body>
 </html>
