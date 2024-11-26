@@ -39,9 +39,9 @@ const carregarVagas = () => {
         novaVaga.id = `vaga${item.vacancyNumber}`;
         novaVaga.querySelector('.vaga-numero').textContent = `Vaga ${item.vacancyNumber}`;
         novaVaga.querySelector('.vaga-status').textContent = item.status === 0 ? "Disponível" : "Ocupada";
-        novaVaga.onclick = () => {
+        novaVaga.onclick = async  () => {
             console.log(item.status)
-            updatePanel(item);
+            await updatePanel(item);
         }
 
         // Adiciona classes de estilo com base no status

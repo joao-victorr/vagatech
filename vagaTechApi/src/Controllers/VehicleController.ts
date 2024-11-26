@@ -49,6 +49,7 @@ export class VehicleController {
       return;
     }
 
+    console.log("teste")
     const vehicles = await prismaClient.vehicle.findMany();
     res.status(200).json(vehicles);
     return;

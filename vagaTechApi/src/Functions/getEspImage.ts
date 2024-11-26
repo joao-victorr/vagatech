@@ -23,7 +23,6 @@ const saveImage = async (imageBuffer: Buffer) => {
 }
 
 export const getPlateVehicle = async (ipAddress: string) => {
-  return "00E6969"
   const url = `http://${ipAddress}/capture`
 
   const res = await axios.get(url, {
