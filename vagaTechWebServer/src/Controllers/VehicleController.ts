@@ -36,7 +36,6 @@ export class VehicleController {
   };
 
   async read(req: Request, res: Response) {
-    console.log("teste")
     if (req.query.id) {
       const id = req.query.id as string
       const vehicle = await prismaClient.vehicle.findUnique({

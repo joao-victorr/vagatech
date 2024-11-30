@@ -31,8 +31,8 @@ model Client {
 model Vehicle {
   id               String   @id @default(cuid())
   plate            String   @unique
-  clientId         String // Chave estrangeira para Client
-  client           Client   @relation(fields: [clientId], references: [id]) // Relacionamento many-to-one com Client
+  clientId         String? // Chave estrangeira para Client
+  client           Client?  @relation(fields: [clientId], references: [id]) // Relacionamento many-to-one com Client
   currentVacancyId String?  @unique // Chave estrangeira opcional para Vacancy
   currentVacancy   Vacancy? @relation("VehicleVacancy", fields: [currentVacancyId], references: [id]) // Relacionamento one-to-one
 }

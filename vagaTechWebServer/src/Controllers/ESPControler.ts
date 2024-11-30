@@ -36,7 +36,7 @@ export class ESPController {
         return;
       }
 
-      const numberPlate = "BBX3E45"; //await getPlateVehicle(data.ip);
+      const numberPlate = await getPlateVehicle(data.ip);
 
       if (!numberPlate) {
         console.error("Falha ao pegar número da placa.");
@@ -50,9 +50,30 @@ export class ESPController {
       });
 
       if (!vehicle) {
-        console.error("Veículo não encontrado.");
-        res.status(404).send("Vehicle not found");
-        return;
+        console.log("No client");
+
+        const vehicle = await prismaClient.vehicle.create({
+          data: {
+            plate: numberPlate
+          }
+        })
+
+        const vacancy = await prismaClient.vacancy.update({
+          where: { vacancyNumber: data.vacancyNumber },
+          data: {
+            status: 1,
+            currentVehicleId: vehicle.id,
+          },
+          include: {
+            currentVehicle: true,
+            client: true,
+          },
+        });
+  
+        emitSocket.emitUpdateVacancy(vacancy);
+        res.status(200).json({ message: "success", vacancyStatus: vacancy.status });
+
+        return
       }
 
       const vacancy = await prismaClient.vacancy.update({

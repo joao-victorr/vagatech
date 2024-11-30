@@ -67,16 +67,28 @@ socket.on('connect', () => {
 });
 
 socket.on("vacancyUpdate", (vagaInfo) => {
+    console.log("TESTE: ", vagaInfo);
+
+    if (vagaInfo.numberPlate) {
+        const vagaIndex = data.findIndex(vaga => vaga.id === vagaInfo.vacancy.id);
+
+        if (vagaIndex !== -1) {
+            // Atualiza os dados da vaga
+            data[vagaIndex] = { ...data[vagaIndex],...vagaInfo };
+            console.log(data)
+        }
+        
+    }
 
     const vagaIndex = data.findIndex(vaga => vaga.id === vagaInfo.id);
 
-  if (vagaIndex !== -1) {
+    if (vagaIndex !== -1) {
     // Atualiza os dados da vaga
     data[vagaIndex] = { ...data[vagaIndex], ...vagaInfo };
     console.log(data)
 
     carregarVagas();
 
-  }
+    }
     
 })

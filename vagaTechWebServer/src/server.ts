@@ -22,6 +22,8 @@ export const io = new SocketIOServer(httpServer, {
 }); // Cria o servidor WebSocket associado ao HTTP
 
 // Middleware do Express
+app.use(express.static('public')); // Configura o diretório para servir os arquivos estáticos
+app.use(express.json()); // Configura o middleware para converter corpo das requisições para JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
